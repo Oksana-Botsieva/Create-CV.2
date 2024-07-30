@@ -36,6 +36,7 @@ const Skills: React.FC = () => {
         />
       </Control>
       <List
+        locale={{ emptyText: " " }}
         dataSource={selectedSkills}
         renderItem={(item) => <List.Item>{item}</List.Item>}
       />
