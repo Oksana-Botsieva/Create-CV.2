@@ -40,20 +40,47 @@ const Experience: React.FC = () => {
     }
   };
 
+  // Generic function to handle changes for any field
+  const handleInputChange = (
+    index: number,
+    field: keyof IExperience,
+    value: any,
+  ) => {
+    const newForms = [...forms];
+    newForms[index] = { ...newForms[index], [field]: value };
+    setForms(newForms);
+  };
+
   const renderForm = (form: IExperience, index: number) => (
     <Card key={form.id}>
       <S.ExperienceTitle>Место работы</S.ExperienceTitle>
       <Control label={"Компания"}>
-        <Input value={form.company} />
+        <Input
+          value={form.company}
+          onChange={(e) => handleInputChange(index, "company", e.target.value)}
+        />
       </Control>
       <Control label={"Должность"}>
-        <Input value={form.position} />
+        <Input
+          value={form.position}
+          onChange={(e) => handleInputChange(index, "position", e.target.value)}
+        />
       </Control>
       <Control label={"Период работы"}>
-        <RangePicker placeholder={["Начало", "Конец"]} value={form.date} />
+        <RangePicker
+          placeholder={["Начало", "Конец"]}
+          value={form.date}
+          onChange={(dates) => handleInputChange(index, "date", dates)}
+        />
       </Control>
       <Control label={"Описание"}>
-        <TextArea rows={5} value={form.description} />
+        <TextArea
+          rows={5}
+          value={form.description}
+          onChange={(e) =>
+            handleInputChange(index, "description", e.target.value)
+          }
+        />
       </Control>
       <Button onClick={handleAddForm} type={"primary"}>
         Добавить ещё
