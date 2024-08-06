@@ -1,86 +1,68 @@
-import React, { useState } from "react";
+import React from "react";
+import { Card } from "../Card/Card";
+import { Control } from "../ControlForm/Control";
+import { DatePicker, Input, Select } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, DatePicker, Input, Select } from "antd";
+import { RootState } from "../../store/store";
+import { setDate, setDegree, setInstitution } from "../../store/educationSlice";
 import { Dayjs } from "dayjs";
-import { AppDispatch, RootState } from "../../store/store";
-import {
-  addEducation,
-  IEducation,
-  removeEducation,
-  updateEducation,
-} from "../../store/educationSlice";
 
-const { Option } = Select;
+const Education = () => {
+  const dispatch = useDispatch();
+  const education = useSelector((state: RootState) => state.education);
 
-const Education: React.FC = () => {
-  const dispatch: AppDispatch = useDispatch();
-  const educationList = useSelector((state: RootState) => state.education);
+  const educationOptions = [
+    {
+      value: "bachelor",
+      label: "Бакалавр",
+    },
+    {
+      value: "master",
+      label: "Магистратура",
+    },
+  ];
 
-  const [institution, setInstitution] = useState("");
-  const [degree, setDegree] = useState("бакалавр");
-  const [dateEnd, setDateEnd] = useState<Dayjs | null>(null);
-
-  // Вспомогательная функция для обновления поля и отправки действия
-  const updateEducationField = (index: number, field: Partial<IEducation>) => {
-    const updatedEducation = { ...educationList[index], ...field };
-    dispatch(updateEducation({ index, education: updatedEducation }));
+  const handleChangeInstitution = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const institution = event.target.value;
+    dispatch(setInstitution(institution));
   };
 
-  const handleAddEducation = () => {
-    dispatch(addEducation({ institution, degree, dateEnd }));
-    setInstitution("");
-    setDegree("бакалавр");
-    setDateEnd(null);
+  const handleChangeDegree = (value: string) => {
+    dispatch(setDegree(value));
   };
-
-  const handleRemoveEducation = (index: number) => {
-    dispatch(removeEducation(index));
+  const handleChangeDate = (date: Dayjs | null) => {
+    if (date) {
+      dispatch(setDate(date));
+    }
   };
-
   return (
-    <div>
-      {educationList.map((education, index) => (
-        <div key={index} style={{ marginBottom: "20px" }}>
-          <Input
-            placeholder="Учреждение"
-            value={education.institution}
-            onChange={(e) =>
-              updateEducationField(index, { institution: e.target.value })
-            }
-          />
-          <DatePicker
-            placeholder="Дата окончания"
-            value={education.dateEnd}
-            onChange={(date) => updateEducationField(index, { dateEnd: date })}
-          />
-          <Select
-            value={education.degree}
-            onChange={(value) => updateEducationField(index, { degree: value })}
-          >
-            <Option value="бакалавр">Бакалавр</Option>
-            <Option value="магистратура">Магистратура</Option>
-          </Select>
-          <Button onClick={() => handleRemoveEducation(index)}>Удалить</Button>
-        </div>
-      ))}
-      <div>
+    <Card>
+      <Control label={"Учреждение"}>
         <Input
-          placeholder="Учреждение"
-          value={institution}
-          onChange={(e) => setInstitution(e.target.value)}
+          value={education.institution}
+          onChange={handleChangeInstitution}
+          placeholder={"Учреждение"}
         />
+      </Control>
+      <Control label={"Дата окончания"}>
         <DatePicker
-          placeholder="Дата окончания"
-          value={dateEnd}
-          onChange={(date) => setDateEnd(date)}
+          value={education.date}
+          onChange={handleChangeDate}
+          placeholder={"Дата окончания"}
         />
-        <Select value={degree} onChange={(value) => setDegree(value)}>
-          <Option value="бакалавр">Бакалавр</Option>
-          <Option value="магистратура">Магистратура</Option>
-        </Select>
-        <Button onClick={handleAddEducation}>Добавить образование</Button>
-      </div>
-    </div>
+      </Control>
+      <Control label={"Степень"}>
+        <Select
+          value={education.degree}
+          placeholder="Выберите степень"
+          onChange={handleChangeDegree}
+          options={educationOptions}
+          style={{ width: "300px" }}
+        />
+      </Control>
+    </Card>
   );
 };
 

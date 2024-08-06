@@ -1,47 +1,33 @@
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {Dayjs} from "dayjs";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Dayjs } from "dayjs";
 
-// Определяем интерфейс для данных образования
 export interface IEducation {
   institution: string;
   degree: string;
-  dateEnd: Dayjs | null;
+  date: Dayjs | null;
 }
 
-// Начальное состояние - массив с одним элементом для примера
-const initialState: IEducation[] = [
-  {
-    institution: "",
-    degree: "бакалавр",
-    dateEnd: null,
-  },
-];
+const initialState: IEducation = {
+  institution: "",
+  degree: "бакалавр",
+  date: null,
+};
 
-// Создаем слайс
 const educationSlice = createSlice({
   name: "education",
   initialState,
   reducers: {
-    // Добавляем новое образование
-    addEducation: (state, action: PayloadAction<IEducation>) => {
-      state.push(action.payload);
+    setInstitution: (state, action: PayloadAction<string>) => {
+      state.institution = action.payload;
     },
-    // Удаляем образование по индексу
-    removeEducation: (state, action: PayloadAction<number>) => {
-      state.splice(action.payload, 1);
+    setDegree: (state, action: PayloadAction<string>) => {
+      state.degree = action.payload;
     },
-    // Обновляем существующее образование по индексу
-    updateEducation: (
-      state,
-      action: PayloadAction<{ index: number; education: IEducation }>,
-    ) => {
-      const { index, education } = action.payload;
-      state[index] = education;
+    setDate: (state, action: PayloadAction<Dayjs>) => {
+      state.date = action.payload;
     },
   },
 });
 
-// Экспортируем действия и редюсер
-export const { addEducation, removeEducation, updateEducation } =
-  educationSlice.actions;
+export const { setInstitution, setDegree, setDate } = educationSlice.actions;
 export default educationSlice.reducer;
