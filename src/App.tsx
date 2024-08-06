@@ -15,9 +15,9 @@ function App() {
         <Header />
         <Title title={"Персональная информация"} />
         <PersonalInfo />
-        <Title title={"Образование"} />
-        <Skills />
         <Title title={"Навыки"} />
+        <Skills />
+        <Title title={"Образование"} />
         <Education />
         <Title title={"Опыт работы"} />
         <Experience />
