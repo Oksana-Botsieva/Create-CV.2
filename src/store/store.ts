@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import personalInfoReducer from "./personalInfoSlice";
+import educationReducer from "./educationSlice";
 
 const store = configureStore({
   reducer: {
     personalInfo: personalInfoReducer,
+    education: educationReducer,
   },
 });
 
